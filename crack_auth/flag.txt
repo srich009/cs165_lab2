@@ -1,3 +1,14 @@
 Username: admin
 Password: shdfg34@5sdf#576@135sdf
 Flag:     34gdfh340234
+
+--------------------
+
+sub_401020 = printf
+
+sub_401050 = scanf
+
+sub_401080 = authentification 
+	- input the username and password
+
+overwrite the comparisons with nops
