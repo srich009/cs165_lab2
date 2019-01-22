@@ -1,0 +1,40 @@
+possible things to look at:
+
+IsValidLocale
+
+searching string trial
+
+sub_76B074
+sub_40B160
+sub_40BB48
+	
+	
+// LSTATUS __stdcall RegCloseKey_0(HKEY hKey);
+// LSTATUS __stdcall RegConnectRegistryW(LPCWSTR lpMachineName, HKEY hKey, PHKEY phkResult);
+// LSTATUS __stdcall RegCreateKeyExW(HKEY hKey, LPCWSTR lpSubKey, DWORD Reserved, LPWSTR lpClass, DWORD dwOptions, REGSAM samDesired, const LPSECURITY_ATTRIBUTES lpSecurityAttributes, PHKEY phkResult, LPDWORD lpdwDisposition);
+// LSTATUS __stdcall RegDeleteKeyW(HKEY hKey, LPCWSTR lpSubKey);
+// LSTATUS __stdcall RegDeleteKeyExW(HKEY hKey, LPCWSTR lpSubKey, REGSAM samDesired, DWORD Reserved);
+// LSTATUS __stdcall RegDeleteValueW(HKEY hKey, LPCWSTR lpValueName);
+// LSTATUS __stdcall RegEnumKeyExW(HKEY hKey, DWORD dwIndex, LPWSTR lpName, LPDWORD lpcchName, LPDWORD lpReserved, LPWSTR lpClass, LPDWORD lpcchClass, PFILETIME lpftLastWriteTime);
+// LSTATUS __stdcall RegEnumValueW(HKEY hKey, DWORD dwIndex, LPWSTR lpValueName, LPDWORD lpcchValueName, LPDWORD lpReserved, LPDWORD lpType, LPBYTE lpData, LPDWORD lpcbData);
+// LSTATUS __stdcall RegFlushKey(HKEY hKey);
+// LSTATUS __stdcall RegLoadKeyW(HKEY hKey, LPCWSTR lpSubKey, LPCWSTR lpFile);
+// LSTATUS __stdcall RegOpenKeyExW_0(HKEY hKey, LPCWSTR lpSubKey, DWORD ulOptions, REGSAM samDesired, PHKEY phkResult);
+// LSTATUS __stdcall RegQueryInfoKeyW(HKEY hKey, LPWSTR lpClass, LPDWORD lpcchClass, LPDWORD lpReserved, LPDWORD lpcSubKeys, LPDWORD lpcbMaxSubKeyLen, LPDWORD lpcbMaxClassLen, LPDWORD lpcValues, LPDWORD lpcbMaxValueNameLen, LPDWORD lpcbMaxValueLen, LPDWORD lpcbSecurityDescriptor, PFILETIME lpftLastWriteTime);
+// LSTATUS __stdcall RegQueryValueExW_0(HKEY hKey, LPCWSTR lpValueName, LPDWORD lpReserved, LPDWORD lpType, LPBYTE lpData, LPDWORD lpcbData);
+// LSTATUS __stdcall RegReplaceKeyW(HKEY hKey, LPCWSTR lpSubKey, LPCWSTR lpNewFile, LPCWSTR lpOldFile);
+// LSTATUS __stdcall RegRestoreKeyW(HKEY hKey, LPCWSTR lpFile, DWORD dwFlags);
+// LSTATUS __stdcall RegSaveKeyW(HKEY hKey, LPCWSTR lpFile, const LPSECURITY_ATTRIBUTES lpSecurityAttributes);
+// LSTATUS __stdcall RegSetValueExW(HKEY hKey, LPCWSTR lpValueName, DWORD Reserved, DWORD dwType, const BYTE *lpData, DWORD cbData);
+// LSTATUS __stdcall RegUnLoadKeyW(HKEY hKey, LPCWSTR lpSubKey);
+
+
+// HMENU __stdcall CreatePopupMenu();
+sub_61F3B8
+
+// HWND __stdcall GetLastActivePopup(HWND hWnd);
+
+// BOOL __stdcall ShowOwnedPopups(HWND hWnd, BOOL fShow);
+
+// BOOL __stdcall TrackPopupMenu(HMENU hMenu, UINT uFlags, int x, int y, int nReserved, HWND hWnd, const RECT *prcRect);
+

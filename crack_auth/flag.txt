@@ -4,11 +4,48 @@ Flag:     34gdfh340234
 
 --------------------
 
-sub_401020 = printf
-
-sub_401050 = scanf
 
 sub_401080 = authentification 
-	- input the username and password
 
-overwrite the comparisons with nops
+	this is where the user will input the username and password
+	after they enter the input it moves to loc_4010D5
+	
+	the last instruction in this group is a jump if not zero to loc_4010F5
+	this circles back to loc_4010D5 if zero or continues towards input validation
+	by changing the jump instruction it can skip over this and get to where the printing of the flag is.
+	the part which has the last check before printing is loc_40112B
+	
+	ORIGINAL
+	
+	loc_4010D5:
+	mov     dl, [eax]
+	cmp     dl, [ecx]
+	jnz     short loc_4010F5
+	
+	MODIFIED:
+	
+	loc_4010D5:
+	mov     dl, [eax]
+	cmp     dl, [ecx]
+	jmp     short loc_40112B	
+		
+		
+	the next part is loc_40112B this tests eax and if it is zero it jumps to loc_401156.
+	loc_401156 is the part which prints out the incorrect password message.
+	by replacing jnz loc_401156 with a nop it will instead go to the part which prints the flag.
+	
+	ORIGINAL
+	
+	loc_40112B:
+	test    eax, eax
+	jnz     short loc_401156
+	
+	MODIFIED
+	
+	loc_40112B:
+	test    eax, eax
+	nop
+	
+
+	
+	
