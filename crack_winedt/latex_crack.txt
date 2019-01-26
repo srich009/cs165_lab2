@@ -1,14 +1,80 @@
-possible things to look at:
+possible things to look at/modify
 
-IsValidLocale
+goals:
+A modified WinEdt.exe that can be successfully launched either
+1. without the "Expired Trial Period" banner at the top, 
+or
+2. without the pop-up reminding about the "31-day trial period" even when the local time is set to 1 year after the current time
 
-searching string trial
+----------------------------------------
 
-sub_76B074
+OPTION #1 - remove the banner at the top
+
+searching for string trial:
+
+sub_76B074  ( probably this one )
+	maybe modify the jump not zero "jnz short loc_76B103" to unconditional jump to "jmp short loc_76B103" 
+	this could possibly hop over the part which puts the banner at the top 
+
+sub_40BB48  ( called by 76b074, looks like the routine invoked for Expired/Unregistered... )
+
+sub_40B118
+
+sub_40AD38
+
 sub_40B160
-sub_40BB48
+
+sub_40A35C
 	
+----------------------------------------
+
+possible things that create or are involved in the popups:
+
+CreatePopupMenu
+	sub_61F3B8
 	
+GetLastActivePopup
+	sub_531874
+	sub_63C8F4
+	sub_63D310
+	sub_63F5E4
+	sub_83B0A4
+
+ShowOwnedPopups
+	sub_63C590
+
+TrackPopupMenu
+	sub_62574C
+	sub_644DC8
+
+all popup functions:
+
+// HMENU __stdcall CreatePopupMenu();
+// HWND __stdcall GetLastActivePopup(HWND hWnd);
+// BOOL __stdcall ShowOwnedPopups(HWND hWnd, BOOL fShow);
+// BOOL __stdcall TrackPopupMenu(HMENU hMenu, UINT uFlags, int x, int y, int nReserved, HWND hWnd, const RECT *prcRect);
+
+----------------------------------------
+
+possible things that look at the windows registry
+probably want to target the subroutines which call external functions that query the keys
+
+RegQueryValueExW_0
+	sub_4F9974
+	sub_4F9F6C
+	sub_63A814
+	sub_65D2C8
+	sub_76A624
+	sub_8412C8
+
+RegQueryValueExW
+	sub_40DDC0
+
+RegQueryInfoKeyW
+	sub_4F95D0
+
+all registry functions:
+
 // LSTATUS __stdcall RegCloseKey_0(HKEY hKey);
 // LSTATUS __stdcall RegConnectRegistryW(LPCWSTR lpMachineName, HKEY hKey, PHKEY phkResult);
 // LSTATUS __stdcall RegCreateKeyExW(HKEY hKey, LPCWSTR lpSubKey, DWORD Reserved, LPWSTR lpClass, DWORD dwOptions, REGSAM samDesired, const LPSECURITY_ATTRIBUTES lpSecurityAttributes, PHKEY phkResult, LPDWORD lpdwDisposition);
@@ -28,13 +94,13 @@ sub_40BB48
 // LSTATUS __stdcall RegSetValueExW(HKEY hKey, LPCWSTR lpValueName, DWORD Reserved, DWORD dwType, const BYTE *lpData, DWORD cbData);
 // LSTATUS __stdcall RegUnLoadKeyW(HKEY hKey, LPCWSTR lpSubKey);
 
+----------------------------------------
 
-// HMENU __stdcall CreatePopupMenu();
-sub_61F3B8
+other things to possibly consider:
 
-// HWND __stdcall GetLastActivePopup(HWND hWnd);
+IsValidLocale
+IsValidLocale_0
 
-// BOOL __stdcall ShowOwnedPopups(HWND hWnd, BOOL fShow);
 
-// BOOL __stdcall TrackPopupMenu(HMENU hMenu, UINT uFlags, int x, int y, int nReserved, HWND hWnd, const RECT *prcRect);
+
 
