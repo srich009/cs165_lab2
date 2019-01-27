@@ -2,7 +2,7 @@ possible things to look at/modify
 
 goals:
 A modified WinEdt.exe that can be successfully launched either
-1. without the "Expired Trial Period" banner at the top
+1. without the "Expired Trial Period" banner at the top (DONE)
 or
 2. without the pop-up reminding about the "31-day trial period" even when the local time is set to 1 year after the current time
 
@@ -19,38 +19,31 @@ sub_76B074
 	the jump should skip over the call to sub_40BB48  
 	it is called inside of sub_76b074, looks like it is invoked for Expired/Unregistered part
 	
-----------------------------------------
+Original:
 
-possible things that create or are involved in the popups:
+sub_76B074 proc near
+var_4= dword ptr -4
+push    ebp
+...
+call    sub_40B160
+cmp     byte ptr [ebx+28h], 0
+jnz     short loc_76B103
 
-CreatePopupMenu
-	sub_61F3B8
+Modified:
+
+sub_76B074 proc near
+var_4= dword ptr -4
+push    ebp
+...
+call    sub_40B160
+cmp     byte ptr [ebx+28h], 0
+jmp     short loc_76B103
 	
-GetLastActivePopup
-	sub_531874
-	sub_63C8F4
-	sub_63D310
-	sub_63F5E4
-	sub_83B0A4
-
-ShowOwnedPopups
-	sub_63C590
-
-TrackPopupMenu
-	sub_62574C
-	sub_644DC8
-
-all popup functions:
-
-// HMENU __stdcall CreatePopupMenu();
-// HWND __stdcall GetLastActivePopup(HWND hWnd);
-// BOOL __stdcall ShowOwnedPopups(HWND hWnd, BOOL fShow);
-// BOOL __stdcall TrackPopupMenu(HMENU hMenu, UINT uFlags, int x, int y, int nReserved, HWND hWnd, const RECT *prcRect);
-
 ----------------------------------------
 
 possible things that look at the windows registry
 probably want to target the subroutines which call external functions that query the keys
+but trying to overwrite the function thunks with nops will prevent program form starting
 
 RegQueryValueExW_0
 	sub_4F9974
@@ -89,11 +82,33 @@ all registry functions:
 
 ----------------------------------------
 
-other things to possibly consider:
+possible things that create or are involved in the popups:
 
-IsValidLocale
-IsValidLocale_0
+GetLastActivePopup
+	sub_531874
+	sub_63C8F4
+	sub_63D310
+	sub_63F5E4
+	sub_83B0A4
 
+TrackPopupMenu
+	sub_62574C
+	sub_644DC8
+
+ShowOwnedPopups  ( NOT THIS, modify does nothing )
+	sub_63C590
+
+CreatePopupMenu ( NOT THIS, modify the jump over this breaks the program )
+	sub_61F3B8
+
+all popup functions:
+
+// HMENU __stdcall CreatePopupMenu();
+// HWND __stdcall GetLastActivePopup(HWND hWnd);
+// BOOL __stdcall ShowOwnedPopups(HWND hWnd, BOOL fShow);
+// BOOL __stdcall TrackPopupMenu(HMENU hMenu, UINT uFlags, int x, int y, int nReserved, HWND hWnd, const RECT *prcRect);
+
+----------------------------------------
 
 
 
