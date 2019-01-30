@@ -41,74 +41,59 @@ jmp     short loc_76B103
 	
 ----------------------------------------
 
-possible things that look at the windows registry
-probably want to target the subroutines which call external functions that query the keys
-but trying to overwrite the function thunks with nops will prevent program form starting
+OPTION #2 - remove initial popup
 
-RegQueryValueExW_0
-	sub_4F9974
-	sub_4F9F6C
-	sub_63A814
-	sub_65D2C8
-	sub_76A624
-	sub_8412C8
-
-RegQueryValueExW
-	sub_40DDC0
-
-RegQueryInfoKeyW
-	sub_4F95D0
-
-all registry functions:
-
-// LSTATUS __stdcall RegCloseKey_0(HKEY hKey);
-// LSTATUS __stdcall RegConnectRegistryW(LPCWSTR lpMachineName, HKEY hKey, PHKEY phkResult);
-// LSTATUS __stdcall RegCreateKeyExW(HKEY hKey, LPCWSTR lpSubKey, DWORD Reserved, LPWSTR lpClass, DWORD dwOptions, REGSAM samDesired, const LPSECURITY_ATTRIBUTES lpSecurityAttributes, PHKEY phkResult, LPDWORD lpdwDisposition);
-// LSTATUS __stdcall RegDeleteKeyW(HKEY hKey, LPCWSTR lpSubKey);
-// LSTATUS __stdcall RegDeleteKeyExW(HKEY hKey, LPCWSTR lpSubKey, REGSAM samDesired, DWORD Reserved);
-// LSTATUS __stdcall RegDeleteValueW(HKEY hKey, LPCWSTR lpValueName);
-// LSTATUS __stdcall RegEnumKeyExW(HKEY hKey, DWORD dwIndex, LPWSTR lpName, LPDWORD lpcchName, LPDWORD lpReserved, LPWSTR lpClass, LPDWORD lpcchClass, PFILETIME lpftLastWriteTime);
-// LSTATUS __stdcall RegEnumValueW(HKEY hKey, DWORD dwIndex, LPWSTR lpValueName, LPDWORD lpcchValueName, LPDWORD lpReserved, LPDWORD lpType, LPBYTE lpData, LPDWORD lpcbData);
-// LSTATUS __stdcall RegFlushKey(HKEY hKey);
-// LSTATUS __stdcall RegLoadKeyW(HKEY hKey, LPCWSTR lpSubKey, LPCWSTR lpFile);
-// LSTATUS __stdcall RegOpenKeyExW_0(HKEY hKey, LPCWSTR lpSubKey, DWORD ulOptions, REGSAM samDesired, PHKEY phkResult);
-// LSTATUS __stdcall RegQueryInfoKeyW(HKEY hKey, LPWSTR lpClass, LPDWORD lpcchClass, LPDWORD lpReserved, LPDWORD lpcSubKeys, LPDWORD lpcbMaxSubKeyLen, LPDWORD lpcbMaxClassLen, LPDWORD lpcValues, LPDWORD lpcbMaxValueNameLen, LPDWORD lpcbMaxValueLen, LPDWORD lpcbSecurityDescriptor, PFILETIME lpftLastWriteTime);
-// LSTATUS __stdcall RegQueryValueExW_0(HKEY hKey, LPCWSTR lpValueName, LPDWORD lpReserved, LPDWORD lpType, LPBYTE lpData, LPDWORD lpcbData);
-// LSTATUS __stdcall RegReplaceKeyW(HKEY hKey, LPCWSTR lpSubKey, LPCWSTR lpNewFile, LPCWSTR lpOldFile);
-// LSTATUS __stdcall RegRestoreKeyW(HKEY hKey, LPCWSTR lpFile, DWORD dwFlags);
-// LSTATUS __stdcall RegSaveKeyW(HKEY hKey, LPCWSTR lpFile, const LPSECURITY_ATTRIBUTES lpSecurityAttributes);
-// LSTATUS __stdcall RegSetValueExW(HKEY hKey, LPCWSTR lpValueName, DWORD Reserved, DWORD dwType, const BYTE *lpData, DWORD cbData);
-// LSTATUS __stdcall RegUnLoadKeyW(HKEY hKey, LPCWSTR lpSubKey);
-
-----------------------------------------
-
-possible things that create or are involved in the popups:
-
-GetLastActivePopup
-	sub_531874
-	sub_63C8F4
-	sub_63D310
-	sub_63F5E4
-	sub_83B0A4
-
-TrackPopupMenu
-	sub_62574C
-	sub_644DC8
-
-ShowOwnedPopups  ( NOT THIS, modify does nothing )
-	sub_63C590
-
-CreatePopupMenu ( NOT THIS, modify the jump over this breaks the program )
-	sub_61F3B8
-
-all popup functions:
-
-// HMENU __stdcall CreatePopupMenu();
-// HWND __stdcall GetLastActivePopup(HWND hWnd);
-// BOOL __stdcall ShowOwnedPopups(HWND hWnd, BOOL fShow);
-// BOOL __stdcall TrackPopupMenu(HMENU hMenu, UINT uFlags, int x, int y, int nReserved, HWND hWnd, const RECT *prcRect);
-
-----------------------------------------
+.itext:00858BE8                 public start
+.itext:00858BE8 start:                                  ; DATA XREF: HEADER:00400128↑o
+.itext:00858BE8                 push    ebp
+.itext:00858BE9                 mov     ebp, esp
+.itext:00858BEB                 add     esp, 0FFFFFFF0h
+.itext:00858BEE                 push    ebx
+.itext:00858BEF                 mov     eax, offset unk_84E3F0
+.itext:00858BF4                 call    sub_40FD24
+.itext:00858BF9                 mov     ebx, off_863510
+.itext:00858BFF                 call    sub_838F5C
+.itext:00858C04                 mov     eax, [ebx]
+.itext:00858C06                 call    sub_63DBBC
+.itext:00858C0B                 mov     eax, [ebx]
+.itext:00858C0D                 mov     edx, offset aWinedt90 ; "WinEdt 9.0"
+.itext:00858C12                 call    sub_63D504
+.itext:00858C17                 call    sub_406C4C
+.itext:00858C1C                 xor     edx, edx
+.itext:00858C1E                 mov     eax, offset aInitdata ; "InitData"
+.itext:00858C23                 call    sub_838EB8
+.itext:00858C28                 mov     eax, [ebx]
+.itext:00858C2A                 mov     dl, 1
+.itext:00858C2C                 call    sub_63F8F4
+.itext:00858C31                 mov     eax, [ebx]
+.itext:00858C33                 mov     byte ptr [eax+6Eh], 0
+.itext:00858C37                 call    sub_846118
+.itext:00858C3C                 test    al, al
+.itext:00858C3E                 jz      loc_858F82
+.itext:00858C44                 xor     edx, edx
+.itext:00858C46                 mov     eax, offset aReaddata ; "ReadData"
+.itext:00858C4B                 call    sub_838EB8
+.itext:00858C50                 call    sub_84B948
+.itext:00858C55                 test    al, al
+.itext:00858C57                 jz      loc_858F74
+.itext:00858C5D                 xor     edx, edx
+.itext:00858C5F                 mov     eax, offset aRegok ; "RegOK"
+.itext:00858C64                 call    sub_838EB8
+.itext:00858C69                 mov     eax, off_862F24
+.itext:00858C6E                 cmp     byte ptr [eax+28h], 0
+.itext:00858C72                 jnz     short loc_858CB9
+.itext:00858C74                 mov     eax, off_862F24
+.itext:00858C79                 cmp     dword ptr [eax+24h], 0
+.itext:00858C7D                 jnz     short loc_858C87
+.itext:00858C7F                 cmp     dword ptr [eax+20h], 2Ch
+.itext:00858C83                 jmp     short loc_858CB9
 
 
+
+modify the instuction 00858c83 
+jne short loc_858CB9
+
+to
+
+jmp short loc_858CB9
 
