@@ -2,29 +2,22 @@ possible things to look at/modify
 
 goals:
 A modified WinEdt.exe that can be successfully launched either
-1. without the "Expired Trial Period" banner at the top, 
+1. without the "Expired Trial Period" banner at the top
 or
 2. without the pop-up reminding about the "31-day trial period" even when the local time is set to 1 year after the current time
 
 ----------------------------------------
 
-OPTION #1 - remove the banner at the top
+OPTION #1 - remove the banner at the top (DONE)
 
 searching for string trial:
 
-sub_76B074  ( probably this one )
-	maybe modify the jump not zero "jnz short loc_76B103" to unconditional jump to "jmp short loc_76B103" 
-	this could possibly hop over the part which puts the banner at the top 
-
-sub_40BB48  ( called by 76b074, looks like the routine invoked for Expired/Unregistered... )
-
-sub_40B118
-
-sub_40AD38
-
-sub_40B160
-
-sub_40A35C
+sub_76B074
+	at the very first part at the top of the control flow graph
+	modify the jump not zero "jnz short loc_76B103" to unconditional jump "jmp short loc_76B103" 
+	this will hop over the part which puts the banner at the top 
+	the jump should skip over the call to sub_40BB48  
+	it is called inside of sub_76b074, looks like it is invoked for Expired/Unregistered part
 	
 ----------------------------------------
 
