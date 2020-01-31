@@ -1,8 +1,12 @@
 possible things to look at/modify
 
-goals:
+When installing WinEdt it should be as a private installation.
+It will be installed at C:\Users\[USERNAME]\WinEdt Team\WinEdt 9
+
+goals: (BOTH DONE)
+
 A modified WinEdt.exe that can be successfully launched either
-1. without the "Expired Trial Period" banner at the top (DONE)
+1. without the "Expired Trial Period" banner at the top
 or
 2. without the pop-up reminding about the "31-day trial period" even when the local time is set to 1 year after the current time
 
@@ -43,57 +47,69 @@ jmp     short loc_76B103
 
 OPTION #2 - remove initial popup
 
+At the point where the program starts after it checks the registry it has conditional jumps.
+This is th logic which will cause the initial popup to appear.
+If the checks pass the program will jump to "loc_858CB9"
+want to avoid the jump to both "loc_858C87" and "loc_858C89" that is where the initial pop up will be created.
+if the loc_858C87 falls through the jle it will trigger the popup by going into loc_858C89
+
+Solution:
+can modify the instuction 00858c72 "jnz short loc_858CB9" to "jmp short loc_858CB9"
+or
+can modify the instuction 00858c7D "jnz short loc_858C87" to "jmp short loc_858CB9"
+or 
+can modify the instuction 00858c85 "jmp short loc_858C89" to "jmp short loc_858CB9"
+
+
+Note:
+
+doing this will remove the initial popup.
+the pop up will still be periodically triggered be some internal timer
+
+
+Original Disassembly:
+
 .itext:00858BE8                 public start
 .itext:00858BE8 start:                                  ; DATA XREF: HEADER:00400128↑o
 .itext:00858BE8                 push    ebp
 .itext:00858BE9                 mov     ebp, esp
 .itext:00858BEB                 add     esp, 0FFFFFFF0h
 .itext:00858BEE                 push    ebx
-.itext:00858BEF                 mov     eax, offset unk_84E3F0
-.itext:00858BF4                 call    sub_40FD24
-.itext:00858BF9                 mov     ebx, off_863510
-.itext:00858BFF                 call    sub_838F5C
-.itext:00858C04                 mov     eax, [ebx]
-.itext:00858C06                 call    sub_63DBBC
-.itext:00858C0B                 mov     eax, [ebx]
-.itext:00858C0D                 mov     edx, offset aWinedt90 ; "WinEdt 9.0"
-.itext:00858C12                 call    sub_63D504
-.itext:00858C17                 call    sub_406C4C
-.itext:00858C1C                 xor     edx, edx
-.itext:00858C1E                 mov     eax, offset aInitdata ; "InitData"
-.itext:00858C23                 call    sub_838EB8
-.itext:00858C28                 mov     eax, [ebx]
-.itext:00858C2A                 mov     dl, 1
-.itext:00858C2C                 call    sub_63F8F4
-.itext:00858C31                 mov     eax, [ebx]
-.itext:00858C33                 mov     byte ptr [eax+6Eh], 0
-.itext:00858C37                 call    sub_846118
-.itext:00858C3C                 test    al, al
-.itext:00858C3E                 jz      loc_858F82
-.itext:00858C44                 xor     edx, edx
-.itext:00858C46                 mov     eax, offset aReaddata ; "ReadData"
-.itext:00858C4B                 call    sub_838EB8
-.itext:00858C50                 call    sub_84B948
-.itext:00858C55                 test    al, al
-.itext:00858C57                 jz      loc_858F74
+...
 .itext:00858C5D                 xor     edx, edx
 .itext:00858C5F                 mov     eax, offset aRegok ; "RegOK"
 .itext:00858C64                 call    sub_838EB8
 .itext:00858C69                 mov     eax, off_862F24
 .itext:00858C6E                 cmp     byte ptr [eax+28h], 0
-.itext:00858C72                 jnz     short loc_858CB9
+.itext:00858C72                 jnz     short loc_858CB9				; <---------- HERE
 .itext:00858C74                 mov     eax, off_862F24
 .itext:00858C79                 cmp     dword ptr [eax+24h], 0
-.itext:00858C7D                 jnz     short loc_858C87
+.itext:00858C7D                 jnz     short loc_858C87				; <---------- HERE
 .itext:00858C7F                 cmp     dword ptr [eax+20h], 2Ch
-.itext:00858C83                 jmp     short loc_858CB9
+.itext:00858C83                 jbe     short loc_858CB9
+.itext:00858C85                 jmp     short loc_858C89				; <---------- HERE
+.itext:00858C87 ; ---------------------------------------------------------------------------
+.itext:00858C87
+.itext:00858C87 loc_858C87:                             ; CODE XREF: .itext:00858C7D↑j
+.itext:00858C87                 jle     short loc_858CB9
+.itext:00858C89
+.itext:00858C89 loc_858C89:                             ; CODE XREF: .itext:00858C85↑j
+.itext:00858C89                 mov     eax, off_863454
+.itext:00858C8E                 mov     eax, [eax]
+.itext:00858C90                 call    sub_81637C
+.itext:00858C95                 test    al, al
+.itext:00858C97                 jnz     short loc_858CB9
+.itext:00858C99                 xor     edx, edx
+.itext:00858C9B                 mov     eax, offset aTrialExit ; "Trial Exit"
+.itext:00858CA0                 call    sub_838EB8
+.itext:00858CA5                 call    sub_84CF18
+.itext:00858CAA                 mov     eax, off_8635E0
+.itext:00858CAF                 mov     byte ptr [eax], 1
+.itext:00858CB2                 mov     eax, [ebx]
+.itext:00858CB4                 call    sub_63DE50
 
 
 
-modify the instuction 00858c83 
-jne short loc_858CB9
 
-to
 
-jmp short loc_858CB9
 
